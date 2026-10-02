@@ -21,10 +21,10 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.STD_LOGIC_SIGNED.ALL;
-use IEEE.STD_LOGIC_UNSIGNED.ALL;
-use IEEE.STD_LOGIC_ARITH.ALL;
-use STD.STANDARD.ALL;
+--use IEEE.STD_LOGIC_SIGNED.ALL;
+--use IEEE.STD_LOGIC_UNSIGNED.ALL;
+--use IEEE.STD_LOGIC_ARITH.ALL;
+--use STD.STANDARD.ALL;
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
 use IEEE.NUMERIC_STD.ALL;
@@ -42,30 +42,16 @@ entity gray_count is
 end gray_count;
 
 architecture Behavioral of gray_count is
-    --signal q : std_logic_vector ((N-1) downto 0); 
-    signal state, next_state, hold, next_hold : std_logic_vector (N-1 downto 0);
+    signal bin: unsigned(N-1 downto 0) := (others => '0');
 begin
     reset: process(clk_i, rst_i) begin
         if rst_i = '1' then
-            --q <= (others => '0');
-            state <= (others => '0');
-            led_o <= (others => '0');
+            bin <= (others => '0');
         elsif rising_edge(clk_i) then
-            --q <= q + 1;
-            state <= next_state;
+            bin <= bin + 1;
         end if;
     end process reset;
     
---    count: process(q) begin
---        L1: for i in 0 to N-2 loop
---            led_o(i) <= q(i+1) xor q(i);
---        end loop L1;
---        led_o(N-1) <= q(N-1);
---    end process count;
-    hold <= state xor ('0' & hold(N-1 downto 1));
-    next_hold <= hold + 1;
-    next_state <= next_hold xor ('0' & next_hold(N-1 downto 1));
-    led_o <= state;
-       
+    led_o <= std_logic_vector(bin xor shift_right(bin, 1));
     
 end Behavioral;

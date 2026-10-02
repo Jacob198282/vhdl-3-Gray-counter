@@ -23,9 +23,9 @@
 module gray_count_tb();
     parameter N = 3;
     
-    logic clk_i = 0;
-    logic rst_i = 0;
-    logic [N-1:0] led_o = 0;
+    logic clk_i;
+    logic rst_i;
+    logic [N-1:0] led_o;
     
     gray_count UUT (
         .clk_i(clk_i),
@@ -36,11 +36,15 @@ module gray_count_tb();
     always #10 clk_i = ~clk_i;
     
     initial begin
+        clk_i = 0;
+        rst_i = 0;
+        led_o = 0;
         $monitor ("Time = %0t, rst_i = %0b, led_o = %0b", $time, rst_i, led_o);
         rst_i <= 1;
         #13 rst_i <= 0;
         #33 rst_i <= 1;
         #10 rst_i <= 0;
+        #100;
         $finish;
     end
 endmodule
